@@ -32,4 +32,54 @@ App::uses('Controller', 'Controller');
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
+
+
+  public $components = array(
+    'RequestHandler',
+    'Acl',
+    'Auth' => array(
+      'authorize' => array(
+        'Actions' => array('actionPath' => 'controllers')
+      ),
+      'authError' => 'You have to login.',
+      'authenticate' => array(
+        'Form' => array(
+          'fields' => array('username' => 'username')
+        )
+      )
+    ),
+    'Session', 'Paginator'
+  );
+
+  public function beforeFilter(){
+
+    $extension = $this->RequestHandler->ext;
+
+    if(empty($extension)){
+      // only if no extension found, supress cake no ctp view found error
+      $this->autoRender = false;
+    }
+
+    // everyone allow to register, login & logout at least.
+    $this->Auth->allow(array('register', 'login', 'logout', 'test'));
+  }
+
+  /**
+   * Set Response according to request url and extension.l
+   *
+   * @param array $responseBody
+   * @param string $node
+   */
+  public function setResponse($responseBody = array(), $node= 'results'){
+
+    $extension = $this->RequestHandler->ext;
+
+    if($extension == 'xml'){
+      $this->set('_serialize', $node);
+      $this->set($node, $responseBody);
+    }else{
+      $this->response->type('json');
+      $this->response->body(json_encode($responseBody));
+    }
+  }
 }

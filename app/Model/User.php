@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('AuthComponent', 'Controller/Component');
 /**
  * User Model
  *
@@ -15,13 +16,13 @@ class User extends AppModel {
  */
 	public $displayField = 'username';
 
+  var $actsAs = array('Multivalidatable');
+
   private $RESEVER_USERNAME = array(
-    'admin', 'administrator', 'ethan' , 'user'
+    'admin', 'administrator', 'test', 'tester', 'ethan' , 'user'
   );
 
-
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
-
 /**
  * belongsTo associations
  *
@@ -78,4 +79,109 @@ class User extends AppModel {
 
     return empty($user) ? false : true;
   }
+
+
+  public function login($username, $password){
+
+    $validated = $this->check($username, $password);
+
+    return $validated;
+
+  }
+
+  /**
+   * Check the username and password in order to validate request user.
+   *
+   * Rule 1, Password Match
+   * Rule 2, User is active
+   * Rule 3, Non-deleted
+   *
+   * @param $username User.username
+   * @param $password User.password
+   * @return bool
+   */
+  protected function check($username, $password){
+    if(empty($username) || empty($password)){
+      return false;
+    }else{
+      $hashPwd = AuthComponent::password($password);
+
+      $user = $this->find('first', array(
+        'fields' => array('password', 'is_active', 'is_delete', 'last_login'),
+        'conditions' => array('username' => $username)
+      ));
+
+      $actived = (bool)$user[$this->alias]['is_active'];
+      $deleted = (bool)$user[$this->alias]['is_delete'];
+      $matched = $hashPwd == $user[$this->alias]['password'] ? true : false;
+
+      if($matched && $actived && !$deleted){
+        // only when active & non-deleted user password is correct
+        return true;
+      }else{
+        CakeLog::warning(sprintf("failed to login user %s", $username));
+        CakeLog::warning(sprintf("is_active=%s, is_delete=%s", $actived, $deleted));
+        return false;
+      }
+    }
+
+  }
+
+  /**
+   * Hash the password before saving user in db.
+   *
+   * @param array $option
+   * @return bool|void
+   */
+  public function beforeSave($option = array()){
+    if(isset($this->data[$this->alias]['password'])){
+      $this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);
+    }
+
+  }
+
+  /**
+   * Default validation ruleset
+   */
+  var $validate = array(
+    'username' => array('rule' => 'alphanumeric', 'message' => 'Only letters and numbers please.'),
+    'password' => array('rule' => array('minLength', 6), 'message' => 'Password must be at least 6 characters long.'),
+    'email' => array('rule' => 'email', 'message' => 'Must be a valid email address.'),
+  );
+
+  /**
+   * Custom validation rulesets
+   */
+  var $validationSets = array(
+
+    'register' => array(
+      'username' => array(
+        'username-6' => array(
+          'rule' => array('minLength', 6),
+          'message' => 'Username must be at least 6 characters long.'
+        ),
+        'username-alphanumeric' => array(
+          'rule' => 'alphanumeric',
+          'message' => 'Only letters and numbers, please try again.'
+        )
+
+      ),
+      'password' => array(
+        'rule' => array('minLength', 6),
+        'message' => 'Password must be at least 6 characters long, please try again.'
+      ),
+      'email' => array(
+        'rule' => 'email',
+        'message' => 'Must be a valid email address.'
+      ),
+    ),
+    'changePassword' => array(
+      'password' => array(
+        'rule' => array('minLength', 6),
+        'message' => 'Password must be at least 6 characters long, please try again.'
+      )
+    )
+  );
+
+
 }
