@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('AuthComponent', 'Controller/Component');
+
 /**
  * User Model
  *
@@ -16,7 +17,8 @@ class User extends AppModel {
  */
 	public $displayField = 'username';
 
-  var $actsAs = array('Multivalidatable');
+  public $actsAs = array('Multivalidatable');
+
 
   private $RESEVER_USERNAME = array(
     'admin', 'administrator', 'test', 'tester', 'ethan' , 'user'
@@ -37,6 +39,12 @@ class User extends AppModel {
 			'order' => ''
 		)
 	);
+
+  public $hasOne = array(
+    'Token' => array(
+      'className' => 'LoginToken'
+    )
+  );
 
   /**
    * Check if an username is reserved or already registered.
@@ -81,12 +89,45 @@ class User extends AppModel {
   }
 
 
+  /**
+   * Sign on one user.
+   *
+   * - Check username & password
+   * - If username and password match exactly
+   * -- update last login timestamp
+   * -- Create or update login token
+   *
+   * @param $username User username
+   * @param $password User password
+   * @return bool|mixed
+   */
   public function login($username, $password){
 
     $validated = $this->check($username, $password);
 
-    return $validated;
+    if($validated){
+      // validate username & password
 
+      $userId = $validated[$this->alias]['id'];
+
+      // update last update field
+      $this->updateLastLogin($userId);
+
+      // generate user login token.
+      $loginToken = $this->updateLoginToken($userId, $username, $password);
+
+      return $loginToken;
+    }
+    return $validated;
+  }
+
+  /**
+   * Logout an user.
+   *
+   * @param null $token
+   */
+  public function logout($token = null){
+    $this->Token->invalid($token);
   }
 
   /**
@@ -98,7 +139,7 @@ class User extends AppModel {
    *
    * @param $username User.username
    * @param $password User.password
-   * @return bool
+   * @return bool false or user entity
    */
   protected function check($username, $password){
     if(empty($username) || empty($password)){
@@ -107,9 +148,14 @@ class User extends AppModel {
       $hashPwd = AuthComponent::password($password);
 
       $user = $this->find('first', array(
-        'fields' => array('password', 'is_active', 'is_delete', 'last_login'),
+        'fields' => array('id','password', 'is_active', 'is_delete', 'last_login'),
         'conditions' => array('username' => $username)
       ));
+
+      if(empty($user)){
+        // return directly if no user found
+        return false;
+      }
 
       $actived = (bool)$user[$this->alias]['is_active'];
       $deleted = (bool)$user[$this->alias]['is_delete'];
@@ -117,7 +163,7 @@ class User extends AppModel {
 
       if($matched && $actived && !$deleted){
         // only when active & non-deleted user password is correct
-        return true;
+        return $user;
       }else{
         CakeLog::warning(sprintf("failed to login user %s", $username));
         CakeLog::warning(sprintf("is_active=%s, is_delete=%s", $actived, $deleted));
@@ -182,6 +228,54 @@ class User extends AppModel {
       )
     )
   );
+
+  /**
+   * Update the last_login field.
+   *
+   * @param $userId user primary key
+   */
+  public function updateLastLogin($userId)
+  {
+    $this->id = $userId;
+    $this->saveField('last_login', date('Y-m-d H:i:m', time()));
+  }
+
+  /**
+   * see if token already exists for passing user id and extends expire date accordingly, otherwise create
+   * one brand new token for this user.
+   *
+   * @param $userId User id
+   * @param $username User username
+   * @param $password User password
+   * @return mixed
+   */
+  public function updateLoginToken($userId, $username, $password)
+  {
+
+    $existToken = $this->Token->check($userId);
+
+    if($existToken){
+      $this->Token->id = $existToken[$this->Token->alias]['id'];
+      $this->Token->saveField('expired', date('Y-m-d H:i:m', time()));
+      return $existToken;
+    }
+
+    $token = md5(uniqid(mt_rand(), true) . time() . $username . $password);
+
+    // TODO: might need make it configurable
+    $duration = '1 day';
+
+    $this->Token->create(array(
+      'user_id' => $userId,
+      'token' => $token,
+      'duration' => $duration,
+      'used' => 1,
+      'expired' => date('Y-m-d H:i:m', strtotime($duration))
+    ));
+
+    $loginToken = $this->Token->save();
+    return $loginToken;
+  }
 
 
 }

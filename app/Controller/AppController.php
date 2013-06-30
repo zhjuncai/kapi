@@ -33,6 +33,8 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
 
+  const HEADER_AUTH_TOKEN = 'X-Auth-Token';
+  const PARAM_AUTH_TOKEN = 'auth_token';
 
   public $components = array(
     'RequestHandler',
@@ -81,5 +83,38 @@ class AppController extends Controller {
       $this->response->type('json');
       $this->response->body(json_encode($responseBody));
     }
+  }
+
+  /**
+   * First get token from http header, then url parameters and last from post body.
+   *
+   * @return bool|mixed
+   */
+  public function token(){
+
+    $token = $this->request->header($this::HEADER_AUTH_TOKEN);
+
+    if($token){
+      return $token;
+    }else{
+      $headers = getallheaders();
+      if(!empty($headers[$this::HEADER_AUTH_TOKEN])){
+        return $headers[$this::HEADER_AUTH_TOKEN];
+      }
+    }
+
+    if(!empty($_GET[$this::PARAM_AUTH_TOKEN])){
+      return $_GET[$this::PARAM_AUTH_TOKEN];
+    }
+
+    if(!empty($_POST[$this::PARAM_AUTH_TOKEN])){
+      return $_POST[$this::PARAM_AUTH_TOKEN];
+    }
+
+    if($this->request->is('post') && !empty($this->data[$this::PARAM_AUTH_TOKEN])){
+      return $this->data[$this::PARAM_AUTH_TOKEN];
+    }
+
+    return false;
   }
 }

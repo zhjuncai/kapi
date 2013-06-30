@@ -2,13 +2,13 @@
 App::uses('AppController', 'Controller');
 
 App::uses('Group', 'Model');
+App::uses('TokenUtil', 'Utility');
+
 /**
  * Users Controller
  *
  */
 class UsersController extends AppController {
-
-
 
   public $name = 'user';
 
@@ -81,7 +81,10 @@ class UsersController extends AppController {
   }
 
   /**
-   * User Login
+   * Let user login system and create & save login token into database. It either return json or xml format
+   * according to url extension parsing and the response body inclduing a token that used to verify user other
+   * requests going forward
+   *
    */
   public function login(){
 
@@ -90,10 +93,12 @@ class UsersController extends AppController {
       $username = $this->data['username'];
       $password = $this->data['password'];
 
-      if($this->User->login($username, $password)){
+      $loginResult = $this->User->login($username, $password);
+
+      if($loginResult){
         // login success
-        $token = md5( uniqid() . time() . $username);
-        $this->setResponse(array('token'=>$token));
+        $token = TokenUtil::normalizeToken($loginResult);
+        $this->setResponse($token);
 
       }else{
         // fail to login, need notify requester
@@ -111,7 +116,7 @@ class UsersController extends AppController {
 
   public function logout() {
     $this->Auth->logout();
-    $this->redirect($this->Auth->redirectUrl());
+    $this->User->logout($this->token());
   }
 
 }
