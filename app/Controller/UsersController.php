@@ -106,17 +106,104 @@ class UsersController extends AppController {
 
       }
     }else{
-      $this->response->type('json');
-      $this->response->httpCodes(406);
-      $this->response->body('HTTP Method is not supported');
+        $this->notSupport();
     }
 
 
   }
 
+  /**
+   * Log an user out from the system. Do two things, one is delete user session if exists, and remove
+   * login token from database.
+   */
   public function logout() {
     $this->Auth->logout();
     $this->User->logout($this->token());
+  }
+
+  /**
+   * Change a user password.
+   *
+   * User who uses this function should provide username, old password, new password and confirmed password.
+   *
+   */
+  public function changePassword(){
+
+    if($this->request->is('post')){
+      // only post method could change password
+      $this->User->setValidation('changePassword');
+
+      $username = $oldPass = $newPass = null;
+
+      if(isset($this->data['username'])){
+        $username = trim($this->data['username']);
+      }
+      
+      if(isset($this->data['oldPass'])){
+        $oldPass = $this->data['oldPass'];
+      }
+
+      if(isset($this->data['newPass'])){
+        $newPass = $this->data['newPass'];
+      }
+
+      $token = $this->token();
+
+      if($oldPass){
+        // username and password provided, no token needed.
+        $existUser = $this->User->isUserExist($username);
+        if(!$existUser){
+          $this->setResponse(array('error'=>'user does not exist.'));
+          return;
+        }else{
+          // user exist, need to check if the old password is correct
+          $passedUser = $this->User->check($username, $oldPass);
+
+          $updateSucceed = $this->User->updatePassword($username, $newPass, $passedUser, null);
+          if($updateSucceed){
+            $this->setResponse(array(
+              'result' => true,
+              'message' =>'your password was updated'
+            ));
+            return;
+          }else{
+            $this->setResponse(array(
+              'result' => false,
+              'message' => 'Your password is incorrect.'
+            ));
+            return;
+          }
+
+        }
+      }else{
+        // if old password is not provided, we need token to validate user.
+        if(!empty($token) && $this->User->validToken($token)){
+          $updateSucceed = $this->User->updatePassword($username, $newPass, null, $token);
+
+          if($updateSucceed){
+            $this->setResponse(array(
+              'result' => true,
+              'message' =>'your password was updated'
+            ));
+          }else{
+            $this->setResponse(array(
+              'result' => false,
+              'message' =>'your password fail to update.'
+            ));
+          }
+          return;
+        }else{
+          $this->setResponse(array(
+            'result' => false,
+            'message' => 'user need authentication to change password'
+          ));
+          return;
+        }
+      }
+    }else{
+      $this->notSupport();
+    }
+
   }
 
 }

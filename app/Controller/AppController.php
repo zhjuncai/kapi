@@ -63,7 +63,7 @@ class AppController extends Controller {
     }
 
     // everyone allow to register, login & logout at least.
-    $this->Auth->allow(array('register', 'login', 'logout', 'test'));
+    $this->Auth->allow(array('register', 'login', 'logout', 'changePassword' ,'test'));
   }
 
   /**
@@ -74,16 +74,33 @@ class AppController extends Controller {
    */
   public function setResponse($responseBody = array(), $node= 'results'){
 
-    $extension = $this->RequestHandler->ext;
+    $extension =& $this->RequestHandler->ext;
+
+    if(empty($extension)){
+      $extension = 'json';
+    }
 
     if($extension == 'xml'){
       $this->set('_serialize', $node);
-      $this->set($node, $responseBody);
+      $this->set($node, array($responseBody));
     }else{
+//      $this->set('_serialize', $node);
+//      $this->set($node, $responseBody);
+
       $this->response->type('json');
       $this->response->body(json_encode($responseBody));
     }
   }
+
+  /**
+   * Method not support
+   */
+  public function notSupport(){
+    $this->response->type('json');
+    $this->response->httpCodes(406);
+    $this->response->body(sprintf('HTTP Method %s is not supported', $this->request->method()));
+  }
+
 
   /**
    * First get token from http header, then url parameters and last from post body.
@@ -116,5 +133,30 @@ class AppController extends Controller {
     }
 
     return false;
+  }
+
+  /**
+   * Write the last sql log into error.log
+   *
+   * @param $model String model name.
+   */
+  public function getLastSqlLog($model){
+
+    $modelInst = $this->{$model};
+    $logs = array();
+
+    if($modelInst){
+      $logs = $modelInst->getDataSource()->getLog(false, false);
+    }
+
+    if(!isset($logs['log'])){
+      return;
+    }else{
+      $lastLog = current(end($logs['log']));
+
+      $this->log($lastLog, $type = LOG_WARNING);
+    }
+
+
   }
 }

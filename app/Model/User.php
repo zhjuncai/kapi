@@ -56,6 +56,8 @@ class User extends AppModel {
 
     $exist = false;
 
+    $this->recursive = -1;
+
     $user = $this->find('count', array(
       'conditions' => array(
         'username' => $username
@@ -65,6 +67,7 @@ class User extends AppModel {
     if(isset($user) && !empty($user)){
       $exist = true;
     }else{
+      // check username is in blacklist
       $exist = in_array($username, $this->RESEVER_USERNAME) ? true : false;
     }
 
@@ -78,6 +81,8 @@ class User extends AppModel {
    * @return bool return true if email had been used
    */
   public function isEmailExist($email = null){
+
+    $this->recursive = -1;
 
     $user = $this->find('count', array(
       'conditions' => array(
@@ -141,11 +146,16 @@ class User extends AppModel {
    * @param $password User.password
    * @return bool false or user entity
    */
-  protected function check($username, $password){
+  public function check($username, $password){
+
+    $this->recursive = -1;
+
     if(empty($username) || empty($password)){
       return false;
     }else{
       $hashPwd = AuthComponent::password($password);
+
+
 
       $user = $this->find('first', array(
         'fields' => array('id','password', 'is_active', 'is_delete', 'last_login'),
@@ -222,6 +232,18 @@ class User extends AppModel {
       ),
     ),
     'changePassword' => array(
+      
+      'username' => array(
+        'username-6' => array(
+          'rule' => array('minLength', 6),
+          'message' => 'Username must be at least 6 characters long.'
+        ),
+        'username-alphanumeric' => array(
+          'rule' => 'alphanumeric',
+          'message' => 'Only letters and numbers, please try again.'
+        )
+
+      ),
       'password' => array(
         'rule' => array('minLength', 6),
         'message' => 'Password must be at least 6 characters long, please try again.'
@@ -275,6 +297,43 @@ class User extends AppModel {
 
     $loginToken = $this->Token->save();
     return $loginToken;
+  }
+
+  /**
+   * Change user password.
+   * 
+   * @param $user User an user instance
+   * @param $newPassword new password need to be updated
+   * @return bool true if update success
+   */
+  public function updatePassword($username, $newPassword, $user = null, $token = null){
+
+    if($user){
+      $userId = $user[$this->alias]['id'];
+      $this->id = $userId;
+      return $this->saveField('password', $newPassword);
+    }else if(isset($token)){
+      // to prevent user update other people's password, we need verify username here.
+
+      $tokenUser = $this->Token->getUser($token);
+
+      if(empty($tokenUser) || $username !== $tokenUser[$this->alias]['username']){
+        return false;
+      }else{
+        $userId = $tokenUser[$this->alias]['id'];
+        $this->id = $userId;
+        return $this->saveField('password', $newPassword);
+      }
+
+    }else{
+      return false;
+    }
+
+    
+  }
+
+  public function validToken($token){
+    return $this->Token->isValidToken($token);
   }
 
 
