@@ -93,7 +93,7 @@ class UsersController extends AppController {
       $username = $this->data['username'];
       $password = $this->data['password'];
 
-      $loginResult = $this->User->login($username, $password);
+      $loginResult = $this->User->authenticate($username, $password);
 
       if($loginResult){
         // login success

@@ -56,22 +56,22 @@ class User extends AppModel {
 
     $exist = false;
 
-    $this->recursive = -1;
+    $exist = in_array($username, $this->RESEVER_USERNAME) ? true : false;
 
-    $user = $this->find('count', array(
-      'conditions' => array(
-        'username' => $username
-      )
-    ));
-
-    if(isset($user) && !empty($user)){
-      $exist = true;
+    if($exist){
+      return $exist;
     }else{
-      // check username is in blacklist
-      $exist = in_array($username, $this->RESEVER_USERNAME) ? true : false;
+      $this->recursive = -1;
+
+      $user = $this->find('count', array(
+        'conditions' => array(
+          'username' => $username
+        )
+      ));
+
+      return $user > 0 ? true :false;
     }
 
-    return $exist;
   }
 
   /**
@@ -106,7 +106,7 @@ class User extends AppModel {
    * @param $password User password
    * @return bool|mixed
    */
-  public function login($username, $password){
+  public function authenticate($username, $password){
 
     $validated = $this->check($username, $password);
 
