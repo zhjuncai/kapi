@@ -3,7 +3,7 @@
  * userFixture
  *
  */
-class userFixture extends CakeTestFixture {
+class UserFixture extends CakeTestFixture {
 
   public $import = array(
     'model' => 'User'
