@@ -240,7 +240,7 @@ Configure::write('Routing.prefixes', array('admin'));
  * any date & time related errors.
  */
   // changed for generating a universal time
-	date_default_timezone_set('UTC');
+	date_default_timezone_set('PRC');
 
 /**
  *
@@ -347,3 +347,17 @@ Cache::config('_cake_model_', array(
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration
 ));
+
+Configure::write('Account.Level', array(
+  '1' => 'Basic',
+  '2' => 'Premium'
+));
+
+Configure::write('Account.Type', array(
+  '1' => 'Restaurant',
+  '2' => 'Coffee Bar',
+  '3' => 'Pub'
+));
+
+
+

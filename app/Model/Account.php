@@ -11,69 +11,100 @@ App::uses('AppModel', 'Model');
  */
 class Account extends AppModel {
 
-/**
- * Display field
- *
- * @var string
- */
-	public $displayField = 'name';
+  /**
+   * Display field
+   *
+   * @var string
+   */
+  public $displayField = 'name';
+
+  /**
+   * A basic account, basic account that might lack of features
+   */
+  const BASIC = '1';
+  /**
+   * A Premium Account that has full of features.
+   */
+  const PREMIUM = '2';
+
+  /**
+   * Now only consider three type of Account.
+   **/
+  const RESTAURANT = '1';
+  const COFFEE_BAR = '2';
+  const PUB        = '3';
+
+  /**
+   *    * Use is when account was first registered, but haven't been approved by Admin
+   */
+  const REGISTERED = 0;
+
+  /**
+   *    * Administrator is verifying the account.
+   *       */
+  const APPROVING = 1;
+
+  /**
+   *    * Account had been validate and approved and public
+   *       */
+  const ACTIVE = 2;
 
 
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
+  //The Associations below have been created with all possible keys, those that are not needed can be removed
 
-/**
- * hasMany associations
- *
- * @var array
- */
-	public $hasMany = array(
-		'Menu' => array(
-			'className' => 'Menu',
-			'foreignKey' => 'account_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
-		),
-		'Review' => array(
-			'className' => 'Review',
-			'foreignKey' => 'account_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
-		),
-		'Photo' => array(
-			'className' => 'Image',
-			'foreignKey' => 'id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
-		)
-	);
+  /**
+   * hasMany associations
+   *
+   * @var array
+   */
+  public $hasMany = array(
+    'Menu' => array(
+      'className' => 'Menu',
+      'foreignKey' => 'account_id',
+      'dependent' => false,
+      'conditions' => '',
+      'fields' => '',
+      'order' => '',
+      'limit' => '',
+      'offset' => '',
+      'exclusive' => '',
+      'finderQuery' => '',
+      'counterQuery' => ''
+    ),
+    'Review' => array(
+      'className' => 'Review',
+      'foreignKey' => 'account_id',
+      'dependent' => false,
+      'conditions' => '',
+      'fields' => '',
+      'order' => '',
+      'limit' => '',
+      'offset' => '',
+      'exclusive' => '',
+      'finderQuery' => '',
+      'counterQuery' => ''
+    ),
+    'Photo' => array(
+      'className' => 'Image',
+      'foreignKey' => 'id',
+      'dependent' => false,
+      'conditions' => '',
+      'fields' => '',
+      'order' => '',
+      'limit' => '',
+      'offset' => '',
+      'exclusive' => '',
+      'finderQuery' => '',
+      'counterQuery' => ''
+    )
+  );
 
 
-/**
- * hasAndBelongsToMany associations
- *
- * @var array
- */
+  /**
+   * hasAndBelongsToMany associations
+   *
+   * @var array
+   */
   //http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#hasandbelongstomany-habtm
   public $hasAndBelongsToMany = array(
     'Feature' => array(
@@ -125,5 +156,40 @@ class Account extends AppModel {
       'insertQuery'            => ''
     )
   );
+
+  /**
+   * Account Validator.
+   *
+   * name, address  is mandatory
+   */
+  public $validate = array(
+    'name'      => array(
+      'rule'        => array('minLength', 5),
+      'required'    => true,
+      'message'     => "Account name is required"
+    ),
+
+    'level'         => array(
+      'rule'        => array('between', 1, 2),
+      'required'    => true
+    ),
+    'type'          => array(
+      'rule'        => array('between', 10, 20),
+      'required'    => true
+    ),
+
+    'street'        => array(
+      'rule'        => array('minLength', 20),
+      'required'    => true
+    ),
+
+    'telephone'     => array(
+      'rule'        => array('minLength', 10),
+      'required'    => true
+    )
+
+  );
+
+
 
 }

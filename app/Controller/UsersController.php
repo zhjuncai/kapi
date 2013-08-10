@@ -138,7 +138,7 @@ class UsersController extends AppController {
       if(isset($this->data['username'])){
         $username = trim($this->data['username']);
       }
-      
+
       if(isset($this->data['oldPass'])){
         $oldPass = $this->data['oldPass'];
       }
