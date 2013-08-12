@@ -94,6 +94,7 @@ class UsersController extends AppController {
       $password = $this->data['password'];
 
       $loginResult = $this->User->authenticate($username, $password);
+      var_dump($username, $password);
 
       if($loginResult){
         // login success

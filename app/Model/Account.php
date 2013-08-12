@@ -191,5 +191,25 @@ class Account extends AppModel {
   );
 
 
+  /* public allowComment($accid) {{{ */
+  /**
+   * Only enabled and allow_review flag marked as true accounts that is religiable to allow comments.
+   *
+   * @param mixed $accid Account id
+   * @access public
+   * @return void
+   */
+  public function allowComment($accid){
+    $count = $this->find('count', array(
+      'conditions'    => array(
+        'enabled'         => true,
+        'allow_review'    => true,
+        'id'              => $accid
+      )
+    ));
+
+    return $count > 0 ? true : false;
+  }
+  /* }}} */
 
 }

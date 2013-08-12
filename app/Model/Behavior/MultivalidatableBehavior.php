@@ -23,7 +23,7 @@ class MultivalidatableBehavior extends ModelBehavior {
    */
   var $__defaultRules = array();
 
-  function setUp(&$model, $config = array()) {
+  function setUp(Model $model, $config = array()) {
     $this->__defaultRules[$model->name] = $model->validate;
   }
 
