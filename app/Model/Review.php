@@ -47,7 +47,7 @@ class Review extends AppModel {
     ),
     'gene_rating' => array(
       'inlist' => array(
-        'rule' => array('inlist'),
+        'rule' => array('inlist', array(1, 5)),
         //'message' => 'Your custom message here',
         //'allowEmpty' => false,
         //'required' => false,
@@ -56,8 +56,8 @@ class Review extends AppModel {
       ),
     ),
     'service_rating' => array(
-      'inlist' => array(
-        'rule' => array('inlist'),
+      'between' => array(
+        'rule' => array('between',1, 5),
         //'message' => 'Your custom message here',
         //'allowEmpty' => false,
         //'required' => false,
@@ -66,8 +66,8 @@ class Review extends AppModel {
       ),
     ),
     'envi_rating' => array(
-      'inlist' => array(
-        'rule' => array('inlist'),
+      'between' => array(
+        'rule' => array('between', 1, 5),
         //'message' => 'Your custom message here',
         //'allowEmpty' => false,
         //'required' => false,
@@ -76,8 +76,8 @@ class Review extends AppModel {
       ),
     ),
     'food_rating' => array(
-      'inlist' => array(
-        'rule' => array('inlist'),
+      'between' => array(
+        'rule' => array('between', 1, 5),
         //'message' => 'Your custom message here',
         //'allowEmpty' => false,
         //'required' => false,

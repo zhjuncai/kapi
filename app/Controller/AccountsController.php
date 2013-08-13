@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('Account', 'Model');
+App::uses('Review',  'Model');
 /**
  * Accounts Controller
  *
@@ -8,10 +9,10 @@ App::uses('Account', 'Model');
  */
 class AccountsController extends AppController {
 
-  public $uses = array('Account');
+  public $uses = array('Account', 'Review');
 
   public function beforeFilter(){
-    $this->Auth->allow('suggest');
+    $this->Auth->allow('suggest', 'add_comment');
     $this->autoRender = false;
 
   }
@@ -50,10 +51,12 @@ class AccountsController extends AppController {
     // first we need to check if the account exists in our system and not been
     // deleted and it's still an enable account
     $exists = $this->Account->exists($accid);
-    var_dump($exists);
     if(!$exists){
-      // throw AccountNotFound exception
-      throw NotFoundException(__("Account %s is not found", $accid));
+      $responseBody = array(
+        'error'     => __("Account %s is not found", $accid)
+      );
+      $this->setResponse($responseBody);
+      return;
     }
 
     $allowComment = $this->Account->allowComment($accid);
@@ -66,9 +69,9 @@ class AccountsController extends AppController {
       throw MethodNotAllowedException(__("%s method is not allowed",$this->httpMethod()));
     }
 
-    $parsedComment = $this->parseCommentRequest();
+    $parsedComment = $this->parseCommentRequest($accid);
 
-    $saved = $this->Review->save($parsedComment);
+    $saved = $this->Review->saveAll($parsedComment);
     $validationErrors = $this->Review->validationErrors;
 
     $succeed = empty($validationErrors) ? true : false;
@@ -76,7 +79,7 @@ class AccountsController extends AppController {
     if($succeed){
       $this->setResponse($saved);
     }else{
-      $this->setResponse(array('error' => 'save failed'));
+      $this->setResponse($validationErrors);
     }
   }
 
@@ -86,11 +89,12 @@ class AccountsController extends AppController {
    * @access private
    * @return void
    */
-  private function parseCommentRequest(){
+  private function parseCommentRequest($accid){
     $data = $this->data;
 
     $default = array(
-      'status'      => Review::PENDING
+      'status'      => Review::STATUS_PENDING,
+      'account_id'  => $accid
     );
 
     $comment = array_merge($data, $default);

@@ -200,15 +200,15 @@ class Account extends AppModel {
    * @return void
    */
   public function allowComment($accid){
-    $count = $this->find('count', array(
-      'conditions'    => array(
-        'enabled'         => true,
-        'allow_review'    => true,
-        'id'              => $accid
-      )
-    ));
 
-    return $count > 0 ? true : false;
+    $this->id = $accid;
+    $this->recursive = -1;
+    $allowed = $this->field('allow_review', array(
+      'enabled' => true
+    ), 'id desc');
+
+    return $allowed;
+
   }
   /* }}} */
 
