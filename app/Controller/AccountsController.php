@@ -12,17 +12,17 @@ class AccountsController extends AppController {
   public $uses = array('Account', 'Review');
 
   public function beforeFilter(){
-    $this->Auth->allow('suggest', 'add_comment');
+    $this->Auth->allow('suggest');
     $this->autoRender = false;
 
   }
 
   /**
-    * User suggest an account, it used to save a brand new acccount that suggest by register when they couldn't find it
-    * in our system.
-    * @access public
-    * @return void
-    */
+   * User suggest an account, it used to save a brand new acccount that suggest by register when they couldn't find it
+   * in our system.
+   * @access public
+   * @return void
+   */
   public function suggest(){
     // only when user post json format
     if($this->request->is('post')){
@@ -82,6 +82,27 @@ class AccountsController extends AppController {
       $this->setResponse($validationErrors);
     }
   }
+
+
+  /* public comments($accid, $revid = null) {{{ */
+  /**
+   * Get all of registered user comments by one single account
+   *
+   * @param mixed $accid
+   * @param bool $revid
+   * @access public
+   * @return void
+   */
+  public function comments($accid, $revid){
+
+    $reviews = $this->Account->getReviews($accid, $revid);
+
+    $this->setResponse($reviews);
+
+  }
+  /* }}} */
+
+
 
   /**
    * Parse user comment from request and set the default status as pending.

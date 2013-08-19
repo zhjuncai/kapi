@@ -232,7 +232,7 @@ class User extends AppModel {
       ),
     ),
     'changePassword' => array(
-      
+
       'username' => array(
         'username-6' => array(
           'rule' => array('minLength', 6),
@@ -301,7 +301,7 @@ class User extends AppModel {
 
   /**
    * Change user password.
-   * 
+   *
    * @param $user User an user instance
    * @param $newPassword new password need to be updated
    * @return bool true if update success
@@ -329,12 +329,31 @@ class User extends AppModel {
       return false;
     }
 
-    
+
   }
 
   public function validToken($token){
     return $this->Token->isValidToken($token);
   }
 
+  /* public getUserByToken($token) {{{ */
+  /**
+   * getUserByToken
+   *
+   * @param mixed $token
+   * @access public
+   * @return void
+   */
+  public function getUserByToken($token){
 
+    $user = $this->Token->getUser($token);
+
+    if(isset($user['Token'])){
+      unset($user['Token']);
+    }
+
+    return $user;
+
+  }
+  /* }}} */
 }

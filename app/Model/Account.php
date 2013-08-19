@@ -190,6 +190,46 @@ class Account extends AppModel {
 
   );
 
+  /* public getAllReviews($accid) {{{ */
+  /**
+   * Retrieve all reviews posted by registered user, and filter by review status, only approved reviews
+   * return, any pending and denied reviews will be filted out.
+   *
+   * @param mixed $accid Account.id
+   * @access public
+   * @return void
+   */
+  public function getReviews($accid, $revid){
+
+    $this->id = $accid;
+    $this->Behaviors->load('Containable');
+
+    $revCond= array('status' => Review::STATUS_APPROVED);
+
+    if(isset($revid)){
+      $revCond= array_merge($revCond, array('Review.id' => $revid));
+    }
+
+    $comments = $this->find('first', array(
+      'conditions'    => array(
+        'Account.id'      => $accid
+      ),
+      'fields' => array('Account.id', 'Account.name'),
+      'contain' => array(
+        'Review' => array(
+          'fields'      => array('id', 'comment', 'gene_rating', 'food_rating', 'envi_rating', 'service_rating','user_id','created'),
+          'conditions'  => $revCond,
+          'order'       => array('created DESC')
+        )
+      )
+    ));
+
+    $this->Behaviors->unload('Containable');
+
+    return $comments;
+  }
+  /* }}} */
+
 
   /* public allowComment($accid) {{{ */
   /**

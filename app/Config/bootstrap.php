@@ -107,3 +107,8 @@ CakeLog::config('error', array(
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
 	'file' => 'error',
 ));
+
+
+
+define('HEADER_AUTH_TOKEN', 'X-Auth-Token');
+define('PARAM_AUTH_TOKEN' , 'auth_token');

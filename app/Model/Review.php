@@ -38,51 +38,39 @@ class Review extends AppModel {
     'comment' => array(
       'notempty' => array(
         'rule' => array('notempty'),
-        //'message' => 'Your custom message here',
-        //'allowEmpty' => false,
-        //'required' => false,
-        //'last' => false, // Stop validation after this rule
-        //'on' => 'create', // Limit validation to 'create' or 'update' operations
+        'message' => 'comment can not leave as blank',
+        'allowEmpty' => false,
+        'required' => false,
+        'last' => false, // Stop validation after this rule
+        'on' => 'create', // Limit validation to 'create' or 'update' operations
       ),
     ),
     'gene_rating' => array(
       'inlist' => array(
         'rule' => array('inlist', array(1, 5)),
-        //'message' => 'Your custom message here',
-        //'allowEmpty' => false,
+        'message' => 'only 1 to 5 is allowed',
+        'allowEmpty' => false,
         //'required' => false,
-        //'last' => false, // Stop validation after this rule
-        //'on' => 'create', // Limit validation to 'create' or 'update' operations
+        'last' => false, // Stop validation after this rule
+        'on' => 'create', // Limit validation to 'create' or 'update' operations
       ),
     ),
     'service_rating' => array(
       'between' => array(
         'rule' => array('between',1, 5),
-        //'message' => 'Your custom message here',
-        //'allowEmpty' => false,
-        //'required' => false,
-        //'last' => false, // Stop validation after this rule
-        //'on' => 'create', // Limit validation to 'create' or 'update' operations
+        'message' => 'only 1 to 5 is allowed'
       ),
     ),
     'envi_rating' => array(
       'between' => array(
-        'rule' => array('between', 1, 5),
-        //'message' => 'Your custom message here',
-        //'allowEmpty' => false,
-        //'required' => false,
-        //'last' => false, // Stop validation after this rule
-        //'on' => 'create', // Limit validation to 'create' or 'update' operations
+        'rule' => array('between',1, 5),
+        'message' => 'only 1 to 5 is allowed'
       ),
     ),
     'food_rating' => array(
       'between' => array(
         'rule' => array('between', 1, 5),
-        //'message' => 'Your custom message here',
-        //'allowEmpty' => false,
-        //'required' => false,
-        //'last' => false, // Stop validation after this rule
-        //'on' => 'create', // Limit validation to 'create' or 'update' operations
+        'message' => 'only 1 to 5 is allowed'
       ),
     ),
   );

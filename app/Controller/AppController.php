@@ -36,24 +36,33 @@ class AppController extends Controller {
   const HEADER_AUTH_TOKEN = 'X-Auth-Token';
   const PARAM_AUTH_TOKEN = 'auth_token';
 
+  public function isAuthorized(){
+    var_dump($this->token());
+    return true;
+  }
+
   public $components = array(
     'RequestHandler',
-    'Acl',
     'Auth' => array(
-      'authorize' => array(
-        'Actions' => array('actionPath' => 'controllers')
-      ),
-      'authError' => 'You have to login.',
-      'authenticate' => array(
-        'Form' => array(
-          'fields' => array('username' => 'username')
-        )
-      )
+      'authenticate'  => array('Token')
     ),
+    //'Acl',
+    //'Auth' => array(
+      // 'authenticate' => array(
+      //  'Form' => array(
+      //    'fields' => array('username' => 'username')
+      //  )
+      // )
+    //),
     'Session', 'Paginator'
   );
 
   public function beforeFilter(){
+
+
+    if(!$this->Auth->loggedIn()){
+      var_dump($this->token());
+    }
 
     $extension = $this->RequestHandler->ext;
 
