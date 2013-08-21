@@ -8,8 +8,6 @@ class TokenAuthenticate extends BaseAuthenticate{
 
     $foundUser = $this->getUser($request);
 
-    var_dump($foundUser);
-
     return $foundUser;
   }
 

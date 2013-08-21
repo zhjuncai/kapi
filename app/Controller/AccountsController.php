@@ -104,6 +104,23 @@ class AccountsController extends AppController {
 
 
 
+  /* public account_info($accid) {{{ */
+  /**
+   * This function intend to retrieve all of account information, which include
+   * reviews, account detailed info, account photos and menu/menu item etc.
+   *
+   * @param mixed $accid
+   * @access public
+   * @return void
+   */
+  public function account_info($accid){
+    // FIXME Need to be implement later
+
+  }
+  /* }}} */
+
+
+
   /**
    * Parse user comment from request and set the default status as pending.
    *
