@@ -265,11 +265,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `kaigenie`.`accounts_categories`
+-- Table `kaigenie`.`account_categories`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `kaigenie`.`accounts_categories` ;
+DROP TABLE IF EXISTS `kaigenie`.`account_categories` ;
 
-CREATE  TABLE IF NOT EXISTS `kaigenie`.`accounts_categories` (
+CREATE  TABLE IF NOT EXISTS `kaigenie`.`account_categories` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `account_id` INT NOT NULL ,
   `category_id` INT NOT NULL ,
@@ -371,11 +371,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `kaigenie`.`accounts_features`
+-- Table `kaigenie`.`account_features`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `kaigenie`.`accounts_features` ;
+DROP TABLE IF EXISTS `kaigenie`.`account_features` ;
 
-CREATE  TABLE IF NOT EXISTS `kaigenie`.`accounts_features` (
+CREATE  TABLE IF NOT EXISTS `kaigenie`.`account_features` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `account_id` INT NOT NULL ,
   `feature_id` INT NOT NULL ,
@@ -518,11 +518,11 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `kaigenie`.`accounts_users`
+-- Table `kaigenie`.`account_users`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `kaigenie`.`accounts_users` ;
+DROP TABLE IF EXISTS `kaigenie`.`account_users` ;
 
-CREATE  TABLE IF NOT EXISTS `kaigenie`.`accounts_users` (
+CREATE  TABLE IF NOT EXISTS `kaigenie`.`account_users` (
   `ID` INT NOT NULL AUTO_INCREMENT ,
   `user_id` INT NOT NULL ,
   `account_id` INT NOT NULL ,
@@ -547,11 +547,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `kaigenie`.`accounts_images`
+-- Table `kaigenie`.`account_images`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `kaigenie`.`accounts_images` ;
+DROP TABLE IF EXISTS `kaigenie`.`account_images` ;
 
-CREATE  TABLE IF NOT EXISTS `kaigenie`.`accounts_images` (
+CREATE  TABLE IF NOT EXISTS `kaigenie`.`account_images` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `account_id` INT NOT NULL ,
   `image_id` INT NOT NULL ,
