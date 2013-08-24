@@ -68,7 +68,7 @@ class UploadComponent extends Component{
       // Defines which files can be displayed inline when downloaded:
       'inline_file_types' => '/\.(gif|jpe?g|png)$/i',
       // Defines which files (based on their names) are accepted for upload:
-      'accept_file_types' => '/.+$/i',
+      'accept_file_types' =>  '/^image\/gif|jpe?g|png$/i',// '/.+$/i',
       // The php.ini settings upload_max_filesize and post_max_size
       // take precedence over the following max_file_size setting:
       'max_file_size' => null,
@@ -426,7 +426,7 @@ class UploadComponent extends Component{
       $file->error = $this->get_error_message('post_max_size');
       return false;
     }
-    if (!preg_match($this->options['accept_file_types'], $file->name)) {
+    if (!preg_match($this->options['accept_file_types'], $file->type)) {
       $file->error = $this->get_error_message('accept_file_types');
       return false;
     }
@@ -541,8 +541,11 @@ class UploadComponent extends Component{
   }
 
   protected function get_file_ext($name){
-    $pathParts = pathinfo($name);
-    return $pathParts["extension"] ? $pathParts["extension"] : end(explode(".", $name));
+    if(isset($name)){
+      $pathParts = pathinfo($name);
+      return $pathParts["extension"] ? $pathParts["extension"] : end(explode(".", $name));
+    }
+    return null;
   }
 
   protected function handle_form_data($file, $index)

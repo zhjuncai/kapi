@@ -44,23 +44,27 @@ class ImageUploadComponent extends UploadComponent{
       throw new ConfigureException("Account is missing");
     }
     $files = $this->upload_files();
-    $images = array();
+    $images = $errors = array();
     if(!empty($files)){
       foreach($files as $key=>$file){
-        $this->Image->create();
-        $image = array(
-          'name' => $file->original_name,
-          'directory' => $file->dir,
-          'extension' => $file->ext,
-          'size'      => $file->size,
-          'unique_name' => $file->name,
-          'relative_path' => $file->relative_path,
-          'mime_type'   => $file->type
-        );
-        $savedImage = $this->Image->save($image);
-        $images[] = $savedImage;
+        if(isset($this->error)){
+          $errors[] = $file->error;
+        }else{
+          $this->Image->create();
+          $image = array(
+            'name' => $file->original_name,
+            'directory' => $file->dir,
+            'extension' => $file->ext,
+            'size'      => $file->size,
+            'unique_name' => $file->name,
+            'relative_path' => $file->relative_path,
+            'mime_type'   => $file->type
+          );
+          $savedImage = $this->Image->save($image);
+          $images[] = $savedImage;
+        }
       }
-      return $images;
+      return array($images, $errors);
     }
 
     return null;
@@ -105,9 +109,14 @@ class ImageUploadComponent extends UploadComponent{
   }
 
   protected function get_unique_filename($name, $type, $index, $content_range){
-    $tmp = explode('.', $name);
-    $ext = $tmp["1"];
-    return uniqid() . '.' . strtolower($ext);
+    if(isset($name)){
+      $tmp = explode('.', $name);
+      if(is_array($tmp) && count($tmp) > 1){
+        $ext = $tmp["1"];
+        return uniqid() . '.' . strtolower($ext);
+      }
+    }
+    return null;
   }
 
   public function handle_form_data($file, $index){

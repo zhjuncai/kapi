@@ -5,22 +5,31 @@ App::uses('BaseAuthenticate', 'Controller/Component/Auth');
 class TokenAuthenticate extends BaseAuthenticate{
 
   public function authenticate(CakeRequest $request, CakeResponse $response){
+    var_dump($request, $response);
 
-    $foundUser = $this->getUser($request);
-
-    return $foundUser;
   }
 
+  /* public getUser(CakeRequest $request) {{{ */
+  /**
+   * Implement token authenticate mechanism, retrieve user based on user passed
+   * token, if token is not specified either in form, header or url, then it will
+   * return false indicate that user are current not logged in.
+   * @param CakeRequest $request
+   * @access public
+   * @return void
+   */
   public function getUser(CakeRequest $request){
 
-    $field = $this->settings['fields'];
-
     $token = $this->_getToken($request);
+
     if(!$token){
       return false;
     }
-    return $this->_findUserByToken($token);
+
+    $foundUser = $this->_findUserByToken($token);
+    return $foundUser;
   }
+  /* }}} */
 
   public function _getToken($request){
     $token = $request->header(HEADER_AUTH_TOKEN);
@@ -44,12 +53,8 @@ class TokenAuthenticate extends BaseAuthenticate{
     if($request->is('post') && !empty($request->data[PARAM_AUTH_TOKEN])){
       return $request->data[PARAM_AUTH_TOKEN];
     }
-
     return false;
-
-
   }
-
 
   /* public _findUser($token) {{{ */
   /**

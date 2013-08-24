@@ -360,17 +360,11 @@ Configure::write('Account.Type', array(
 ));
 
 Configure::write('App.Uploads', array(
-  'fileType'            => array('jpg', 'jpeg', 'gif', 'png'),
-  'location'            => '/Users/ethan/Uploads/',
-  'sizeLimit'           => 8 * 1024 * 1024, // 8M allowed
-  'thumbWidth'          => 150,
-  'thumbHeight'         => 150,
-
   "static_server"       => "http://localhost",
   "static_uri"           => "/uploads/",
 
-  "accept_file_types"   => '/\.(gif|jpe?g|png)$/i',
-  "upload_dir"           => 'C:/Users/I076004/Uploads/',
+  "accept_file_types"   => '/^image\/png|jpe?g|gif$/i',
+  "upload_dir"           => '/Users/ethan/Documents/GitProj/Uploads/',
   "upload_url"          => '/uploads/',
   "param_name"           => "files",
   "max_file_size"        => 8 * 1024 * 1024,

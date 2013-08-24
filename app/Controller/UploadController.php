@@ -9,42 +9,24 @@
  */
 class UploadController extends AppController{
 
-  public $uses = array("AccountImage", "Account", "Image");
+  public $uses = array("Account", "Image");
 
   public $components = array("ImageUpload");
 
-  public function upload($type="", $id){
-
-    switch ($type){
-      case "account":
-        self::_upload_account($id);
-        break;
-      case "menuitem":
-        self::_upload_item($id);
-        break;
-      default:
-        throw new NotFoundException("The page is not found");
-      }
-  }
-
-  public function test($type, $accid){
-    var_dump($type, $accid);
-  }
-
-  private function _upload_item($item_id){
-
-  }
-
-  private function _upload_account($account_id){
+  public function account($accid){
 
     $this->autoRender = false;
 
     if($this->request->is("post")){
-      $images = $this->ImageUpload->upload(array("account_id" => $account_id));
 
-      $this->AccountImage->saveImages($images,$account_id);
+      list($images, $errors) = $this->ImageUpload->upload(array("account_id" => $accid));
+      if(!empty($images)){
+        $this->Account->saveImages($images, $accid);
+      }
 
-      $this->ImageUpload->json_response($images);
+      if(!empty($errors)){
+        $this->setResponse($errors);
+      }
 
     }
   }

@@ -59,11 +59,6 @@ class AppController extends Controller {
 
   public function beforeFilter(){
 
-
-    if(!$this->Auth->loggedIn()){
-      var_dump($this->token());
-    }
-
     $extension = $this->RequestHandler->ext;
 
     if(empty($extension)){

@@ -252,4 +252,23 @@ class Account extends AppModel {
   }
   /* }}} */
 
+  public function saveImages($images = array(), $accountId = null){
+    if(!empty($images)){
+      $saved = array();
+      foreach($images as $image){
+        $data = array(
+          'image_id'    => $image['Image']['id'],
+          'account_id'  => $accountId
+        );
+
+        $this->AccountImage->create($data);
+
+        $saved[] = $this->AccountImage->save($this->data);
+      }
+      return $saved;
+    }
+
+    return array();
+  }
+
 }
