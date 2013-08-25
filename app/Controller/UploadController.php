@@ -20,14 +20,17 @@ class UploadController extends AppController{
     if($this->request->is("post")){
 
       list($images, $errors) = $this->ImageUpload->upload(array("account_id" => $accid));
+      $responseBody = array();
       if(!empty($images)){
-        $this->Account->saveImages($images, $accid);
+        $savedImages = $this->Account->saveImages($images, $accid);
+        $responseBody = array_merge($responseBody, array('images' => $this->ImageUpload->normalizeImage($images)));
+
       }
 
       if(!empty($errors)){
-        $this->setResponse($errors);
+        $responseBody = array_merge($responseBody, array('errors' => $errors));
       }
-
+      $this->setResponse($responseBody);
     }
   }
 

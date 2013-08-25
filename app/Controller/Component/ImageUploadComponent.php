@@ -70,8 +70,28 @@ class ImageUploadComponent extends UploadComponent{
     return null;
   }
 
+  /* public json_response($images) {{{ */
+  /**
+   * Return JSON Response of uploaded images
+   *
+   * @param mixed $images
+   * @access public
+   * @return void
+   */
   public function json_response($images){
+    $files = $this->normalizeImage($images);
+    return $this->generate_response(array($this->options['param_name'] => $files), true);
+  }
+  /* }}} */
 
+  /* public normalizeImage($images) {{{ */
+  /**
+   * Normalize uploaded images, convert image with urls include origin and thumbnails
+   * @param mixed $images
+   * @access public
+   * @return void
+   */
+  public function normalizeImage($images){
     $model = "Image";
 
     if(empty($images)){
@@ -99,8 +119,9 @@ class ImageUploadComponent extends UploadComponent{
       $files[] = $file;
     }
 
-    return $this->generate_response(array($this->options['param_name'] => $files), true);
+    return $files;
   }
+  /* }}} */
 
   public function initialize(Controller $controller){
 
