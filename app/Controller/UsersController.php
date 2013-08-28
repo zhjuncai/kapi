@@ -206,4 +206,16 @@ class UsersController extends AppController {
 
   }
 
+
+
+  public function genpass(){
+    $argpass = $_GET['arg1'];
+
+    if(isset($argpass)){
+      echo AuthComponent::password($argpass);
+    }else{
+      echo "nothing to hash";
+    }
+  }
+
 }

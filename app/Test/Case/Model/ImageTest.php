@@ -14,14 +14,11 @@ class ImageTest extends CakeTestCase {
    */
   public $fixtures = array(
     'app.image',
-    'app.menuitem',
-    'app.menu',
+    // 'app.menuitem',
+    // 'app.menu',
     'app.account',
     'app.review',
-    'app.category',
-    'app.accounts_category',
     'app.feature',
-    'app.accounts_feature'
   );
 
   /**
@@ -43,6 +40,10 @@ class ImageTest extends CakeTestCase {
     unset($this->Image);
 
     parent::tearDown();
+  }
+
+  public function testImage(){
+    $this->assertTrue(true);
   }
 
 }

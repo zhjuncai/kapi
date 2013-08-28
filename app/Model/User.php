@@ -10,12 +10,12 @@ App::uses('AuthComponent', 'Controller/Component');
  */
 class User extends AppModel {
 
-/**
- * Display field
- *
- * @var string
- */
-	public $displayField = 'username';
+  /**
+   * Display field
+   *
+   * @var string
+   */
+  public $displayField = 'username';
 
   public $actsAs = array('Multivalidatable');
 
@@ -24,21 +24,21 @@ class User extends AppModel {
     'admin', 'administrator', 'test', 'tester', 'ethan' , 'user'
   );
 
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
-/**
- * belongsTo associations
- *
- * @var array
- */
-	public $belongsTo = array(
-		'Group' => array(
-			'className' => 'Group',
-			'foreignKey' => 'group_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		)
-	);
+  //The Associations below have been created with all possible keys, those that are not needed can be removed
+  /**
+   * belongsTo associations
+   *
+   * @var array
+   */
+  public $belongsTo = array(
+    'Group' => array(
+      'className' => 'Group',
+      'foreignKey' => 'group_id',
+      'conditions' => '',
+      'fields' => '',
+      'order' => ''
+    )
+  );
 
   public $hasOne = array(
     'Token' => array(

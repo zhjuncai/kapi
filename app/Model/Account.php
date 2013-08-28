@@ -247,6 +247,7 @@ class Account extends AppModel {
       'enabled' => true
     ), 'id desc');
 
+    $allowed = $allowed == 1 ? true : false;
     return $allowed;
 
   }

@@ -67,11 +67,17 @@ class AccountTest extends CakeTestCase {
 
     $this->assertEquals($accid, $accountImages[0]['AccountImage']['account_id']);
 
-
-
     $emptyImages = array();
     $accountImages = $this->Account->saveImages($emptyImages, $accid);
     $this->assertEmpty($accountImages);
+
+  }
+
+  public function testAllowComment(){
+    $accid = 1;
+    $allowed = $this->Account->allowComment($accid);
+    $this->assertFalse(!$allowed, 'account id '. $accid . ' is not allowed comments');
+    $this->assertTrue($allowed);
 
   }
 

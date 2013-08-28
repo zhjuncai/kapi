@@ -7,47 +7,47 @@ App::uses('User', 'Model');
  */
 class UserTest extends CakeTestCase {
 
-/**
- * Fixtures
- *
- * @var array
- */
-	public $fixtures = array(
+  /**
+   * Fixtures
+   *
+   * @var array
+   */
+  public $fixtures = array(
     'app.group',
     'app.user',
-		'app.login_token'
-	);
+    'app.login_token'
+  );
 
-/**
- * setUp method
- *
- * @return void
- */
-	public function setUp() {
-		parent::setUp();
-		$this->User = ClassRegistry::init('User');
+  /**
+   * setUp method
+   *
+   * @return void
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->User = ClassRegistry::init('User');
     $this->username = 'cakephp';
     $this->password = 'password';
     $this->falsePassword = 'falsepass';
-	}
+  }
 
-/**
- * tearDown method
- *
- * @return void
- */
-	public function tearDown() {
-		unset($this->User);
+  /**
+   * tearDown method
+   *
+   * @return void
+   */
+  public function tearDown() {
+    unset($this->User);
 
-		parent::tearDown();
-	}
+    parent::tearDown();
+  }
 
-/**
- * testIsUserExist method
- *
- * @return void
- */
-	public function testIsUserExist() {
+  /**
+   * testIsUserExist method
+   *
+   * @return void
+   */
+  public function testIsUserExist() {
 
     $admin = $this->User->isUserExist('admin');
 
@@ -58,14 +58,14 @@ class UserTest extends CakeTestCase {
     $this->assertEqual($notExist, false);
 
 
-	}
+  }
 
-/**
- * testIsEmailExist method
- *
- * @return void
- */
-	public function testIsEmailExist() {
+  /**
+   * testIsEmailExist method
+   *
+   * @return void
+   */
+  public function testIsEmailExist() {
 
     $exist = $this->User->isEmailExist('zjczhjuncai@gmail.com');
 
@@ -74,14 +74,14 @@ class UserTest extends CakeTestCase {
     $exist = $this->User->isEmailExist('no-reply@gmail.com');
 
     $this->assertEqual($exist, false);
-	}
+  }
 
-/**
- * testLogin method
- *
- * @return void
- */
-	public function testAuthenticate() {
+  /**
+   * testLogin method
+   *
+   * @return void
+   */
+  public function testAuthenticate() {
 
 
     $cakeUser = $this->User->authenticate($this->username, $this->falsePassword);
@@ -94,15 +94,15 @@ class UserTest extends CakeTestCase {
     $this->assertArrayHasKey('Token',$cakeUser);
 
 
-	}
+  }
 
 
-/**
- * testCheck method
- *
- * @return void
- */
-	public function testCheck() {
+  /**
+   * testCheck method
+   *
+   * @return void
+   */
+  public function testCheck() {
 
     $succeed = $this->User->check($this->username, $this->password);
 
@@ -114,14 +114,14 @@ class UserTest extends CakeTestCase {
     $this->assertFalse($falsy);
 
 
-	}
+  }
 
-/**
- * testUpdateLastLogin method
- *
- * @return void
- */
-	public function testUpdateLastLogin() {
+  /**
+   * testUpdateLastLogin method
+   *
+   * @return void
+   */
+  public function testUpdateLastLogin() {
 
     $lastLogin = date('Y-m-d H:i:m', time());
 
@@ -131,14 +131,14 @@ class UserTest extends CakeTestCase {
     $updated = $this->User->field('last_login');
 
     $this->assertIdentical($lastLogin, $updated, 'last update failed');
-	}
+  }
 
-/**
- * testUpdateLoginToken method
- *
- * @return void
- */
-	public function testUpdateLoginToken() {
+  /**
+   * testUpdateLoginToken method
+   *
+   * @return void
+   */
+  public function testUpdateLoginToken() {
 
     $userId = 9999;
     $anotherId = 1;
@@ -153,12 +153,12 @@ class UserTest extends CakeTestCase {
     $this->assertNotEmpty($newToken);
   }
 
-/**
- * testUpdatePassword method
- *
- * @return void
- */
-	public function testUpdatePassword() {
+  /**
+   * testUpdatePassword method
+   *
+   * @return void
+   */
+  public function testUpdatePassword() {
 
     $newPass = 'secret';
     $token = '0efb582546d4a40f4498557adcf675f8';
@@ -180,14 +180,14 @@ class UserTest extends CakeTestCase {
     $this->assertArrayHasKey($this->User->alias, $succeed);
     $this->assertIdentical($succeed[$this->User->alias]['password'], $newHashPassword);
 
-	}
+  }
 
-/**
- * testValidToken method
- *
- * @return void
- */
-	public function testValidToken() {
-	}
+  /**
+   * testValidToken method
+   *
+   * @return void
+   */
+  public function testValidToken() {
+  }
 
 }
