@@ -411,7 +411,7 @@ CREATE  TABLE IF NOT EXISTS `kaigenie`.`images` (
   `size` INT NULL ,
   `unique_name` VARCHAR(255) NULL ,
   `relative_path` VARCHAR(45) NULL COMMENT 'Relative path of web root' ,
-  `mime_type` VARCHAR(10) NULL ,
+  `mime_type` VARCHAR(100) NULL ,
   `created` DATETIME NULL ,
   `createdBy` VARCHAR(45) NULL ,
   `uploadBy` VARCHAR(45) NULL ,
