@@ -19,6 +19,7 @@ class UploadController extends AppController{
 
     if($this->request->is("post")){
 
+      var_dump($_FILES);
       list($images, $errors) = $this->ImageUpload->upload(array("account_id" => $accid));
       $responseBody = array();
       if(!empty($images)){
