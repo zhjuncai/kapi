@@ -47,7 +47,7 @@ class ImageUploadComponent extends UploadComponent{
     $images = $errors = array();
     if(!empty($files)){
       foreach($files as $key=>$file){
-        if(isset($this->error)){
+        if(isset($file->error)){
           $errors[] = $file->error;
         }else{
           $this->Image->create();

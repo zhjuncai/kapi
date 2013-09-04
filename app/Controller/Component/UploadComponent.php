@@ -832,6 +832,11 @@ class UploadComponent extends Component{
 
   protected function upload_files(){
 
+    if(empty($_FILES)){
+      // if no file input, return an empty array
+      return array();
+    }
+
     $upload = isset($_FILES[$this->options['param_name']]) ? $_FILES[$this->options['param_name']] : null;
     // Parse the Content-Disposition header, if available:
     $file_name = $this->get_server_var('HTTP_CONTENT_DISPOSITION') ?
