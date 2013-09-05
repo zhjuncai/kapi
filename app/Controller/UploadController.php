@@ -7,6 +7,8 @@
  * Date: 5/13/13
  * Time: 8:51 PM
  */
+App::uses('AppController', 'Controller');
+
 class UploadController extends AppController{
 
   public $uses = array("Account", "Image");

@@ -101,7 +101,8 @@ class AppController extends Controller {
    */
   public function notSupport(){
     $this->response->type('json');
-    $this->response->httpCodes(406);
+    // The method you are using to access the file is not allowed.
+    $this->response->statusCode(405); // Method not allowed
     $this->response->body(sprintf('HTTP Method %s is not supported', $this->request->method()));
   }
 
