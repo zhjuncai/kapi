@@ -638,7 +638,7 @@ DROP TABLE IF EXISTS `kaigenie`.`login_tokens` ;
 CREATE  TABLE IF NOT EXISTS `kaigenie`.`login_tokens` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `user_id` INT NOT NULL ,
-  `token` CHAR(32) NOT NULL ,
+  `token` CHAR(40) NOT NULL ,
   `duration` VARCHAR(32) NOT NULL ,
   `used` TINYINT NOT NULL ,
   `created` DATETIME NOT NULL ,
