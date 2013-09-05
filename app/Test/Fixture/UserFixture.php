@@ -20,7 +20,7 @@ class UserFixture extends CakeTestFixture {
       'id' => '1',
       'group_id' => '1000',
       'username' => 'admin',
-      'password' => '84f29ad73c217a078daf75a6d036fe5f3add395d',
+      'password' => 'c09787cf4107fd9c7a7d4546fee167beb6779074',
       'email' => 'zjczhjuncai@gmail.com',
       'slave_email' => null,
       'first_name' => 'Super',
@@ -30,7 +30,7 @@ class UserFixture extends CakeTestFixture {
       'created' => '2013-06-22 22:45:02',
       'modified' => '2013-06-22 22:45:02',
       'is_active' => true,
-      'is_delete' => true,
+      'is_delete' => false,
       'total_point' => null
     ),
 

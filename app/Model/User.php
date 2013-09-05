@@ -155,8 +155,6 @@ class User extends AppModel {
     }else{
       $hashPwd = AuthComponent::password($password);
 
-
-
       $user = $this->find('first', array(
         'fields' => array('id','password', 'is_active', 'is_delete', 'last_login'),
         'conditions' => array('username' => $username)
