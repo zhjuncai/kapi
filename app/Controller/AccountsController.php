@@ -41,12 +41,12 @@ class AccountsController extends AppController {
   /*
    * This method is used for register user add comments. Register user are
    * supposed to add comments when he/she is viewing the account, the web
-   * service URL is /accounts/{accid}/add_comment
+   * service URL is /accounts/{accid}/comments
    *
    * @access public
    * @return void
    */
-  public function add_comment($accid){
+  public function comments($accid){
 
     // first we need to check if the account exists in our system and not been
     // deleted and it's still an enable account
@@ -55,32 +55,45 @@ class AccountsController extends AppController {
       $responseBody = array(
         'error'     => __("Account %s is not found", $accid)
       );
+      $this->response->statusCode(404);
       $this->setResponse($responseBody);
       return;
     }
 
-    $allowComment = $this->Account->allowComment($accid);
-    if(!$allowComment){
-      $this->setResponse(array('error'=>'Account comments is turn off.'));
-      return;
+    $method = strtolower($this->httpMethod());
+    switch($method){
+      case 'get':
+        echo "pull all reviews for this account";
+        break;
+      case 'post':
+        echo "save review";
+
+        $allowComment = $this->Account->allowComment($accid);
+        if(!$allowComment){
+          $this->setResponse(array('error' => __('comments on account is turned off.')));
+          return;
+        }
+        $parsedComment = $this->parseCommentRequest($accid);
+
+        $saved = $this->Review->saveAll($parsedComment);
+        $validationErrors = $this->Review->validationErrors;
+
+        $succeed = empty($validationErrors) ? true : false;
+
+        if($succeed){
+          $this->setResponse(array('success' => __("Your review had been saved")));
+        }else{
+          $this->setResponse($validationErrors);
+        }
+
+        break;
+      case 'put':
+        echo "change review?";
+        break;
+      default:
+        echo "not supported";
     }
 
-    if(!$this->request->is('post')){
-      throw MethodNotAllowedException(__("%s method is not allowed",$this->httpMethod()));
-    }
-
-    $parsedComment = $this->parseCommentRequest($accid);
-
-    $saved = $this->Review->saveAll($parsedComment);
-    $validationErrors = $this->Review->validationErrors;
-
-    $succeed = empty($validationErrors) ? true : false;
-
-    if($succeed){
-      $this->setResponse($saved);
-    }else{
-      $this->setResponse($validationErrors);
-    }
   }
 
 
@@ -93,7 +106,7 @@ class AccountsController extends AppController {
    * @access public
    * @return void
    */
-  public function comments($accid, $revid){
+  public function comments1($accid, $revid){
 
     $reviews = $this->Account->getReviews($accid, $revid);
 

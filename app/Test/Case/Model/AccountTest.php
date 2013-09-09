@@ -37,6 +37,7 @@ class AccountTest extends CakeTestCase {
    */
   public function tearDown() {
     unset($this->Account);
+    unset($this->Image);
 
     parent::tearDown();
   }

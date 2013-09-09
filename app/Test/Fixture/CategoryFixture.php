@@ -15,21 +15,21 @@ class CategoryFixture extends CakeTestFixture {
   );
 
 
-/**
- * Records
- *
- * @var array
- */
-	public $records = array(
-		array(
-			'id' => 1,
-			'name' => 'Chinese Food',
-			'description' => 'Deliciouse Chinese FOod',
-			'created' => '2013-07-21 13:51:42',
-			'modified' => '2013-07-21 13:51:42',
-			'enabled' => true,
-			'deleted' => null
-		),
+  /**
+   * Records
+   *
+   * @var array
+   */
+  public $records = array(
+    array(
+      'id' => 1,
+      'name' => 'Chinese Food',
+      'description' => 'Deliciouse Chinese FOod',
+      'created' => '2013-07-21 13:51:42',
+      'modified' => '2013-07-21 13:51:42',
+      'enabled' => true,
+      'deleted' => null
+    ),
     array(
       'id' => 2,
       'name' => 'Thailand Food',
@@ -57,6 +57,6 @@ class CategoryFixture extends CakeTestFixture {
       'enabled' => true,
       'deleted' => true
     ),
-	);
+  );
 
 }

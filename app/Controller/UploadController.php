@@ -56,4 +56,27 @@ class UploadController extends AppController{
     }
   }
 
+  /* public menu($accid, $menuid) {{{ */
+  /**
+   * This method accept user upload photots for account review. Registered user
+   * is able to post reviews for an account along with some photos
+   * The URL should be /kapi/upload/menu/<accid>/<revid>
+   *
+   * @param mixed $accid
+   * @param mixed $revid
+   * @access public
+   * @return void
+   */
+  public function menu($accid, $revid){
+
+    $review = $this->Review->exists($revid);
+    if(empty($review)){
+      // if review not found in database, check if json post had content, and
+      // create the review for the $accid and saved the uploaded photos
+
+    }
+
+  }
+  /* }}} */
+
 }
